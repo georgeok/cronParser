@@ -1,4 +1,5 @@
-# Build
+
+# Build [![CircleCI](https://circleci.com/gh/georgeok/cronParser.svg?style=svg&circle-token=f2687b639b1c287351640fe25c16291755cfb76d)](https://circleci.com/gh/georgeok/cronParser)
 The code was test to build and run `go 1.12.9`. It has not been tested with
 other versions of GO.
 ```

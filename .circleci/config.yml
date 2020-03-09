@@ -1,0 +1,34 @@
+# Golang CircleCI 2.0 configuration file
+#
+# Check https://circleci.com/docs/2.0/language-go/ for more details
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/golang:1.12
+
+    working_directory: /go/src/github.com/georgeok/cronParse
+    steps:
+      - checkout
+
+      # specify any bash command here prefixed with `run: `
+      - run: go get -v -t -d ./...
+      - run: go build -o cron cmd/cron/main.go
+      - run: go test -v ./...
+      - run: GOOS=windows go build -o cron_win.exe cmd/cron/main.go
+      - run: GOOS=linux go build -o cron_linux cmd/cron/main.go
+      - run: GOOS=darwin go build -o cron_darwin cmd/cron/main.go
+      - run: go test -v ./...
+      - run:
+          command: |
+            mkdir -p /tmp/test-results/gotest
+            gotestsum --junitfile /tmp/test-results/gotest/results.xml
+      - run:
+          command: |
+            go test -coverprofile=c.out
+            go tool cover -html=c.out -o coverage.html
+            mv coverage.html /tmp/artifacts
+      - store_artifacts:
+          path: /tmp/artifacts
+      - store_test_results:
+          path: /tmp/test-results
